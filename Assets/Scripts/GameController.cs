@@ -69,7 +69,7 @@ public class GameController : MonoBehaviour
             coin.transform.position = newPosition;
             GameEventSystem.EmitEvent("CoinSpawn", coin);
         }
-        Debug.Log($"Event: {type}, payload: {payload}");
+        //Debug.Log($"Event: {type}, payload: {payload}");
     }
 
 
