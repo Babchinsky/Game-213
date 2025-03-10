@@ -20,7 +20,7 @@ public class CompassScript : MonoBehaviour
         if (coin == null) return;
 
         Vector3 d = coin.position - character.position;
-        Vector3 camFwd = character.forward; // Camera.main.transform.forward;
+        Vector3 camFwd = Camera.main.transform.forward;     // character.forward;
         d.y = 0f;
         camFwd.y = 0f;
         float angle = Vector3.SignedAngle(camFwd, d, Vector3.down);
