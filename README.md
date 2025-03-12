@@ -40,5 +40,7 @@
 
 ### 12.03.2025
 
+![image](https://github.com/user-attachments/assets/95d96222-d929-459b-b47a-b19536845661)
+
 ![image](https://github.com/user-attachments/assets/7dc11c46-dcf9-4ada-916c-6b586753545b)
 
