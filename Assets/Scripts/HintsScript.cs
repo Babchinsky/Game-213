@@ -3,24 +3,84 @@ using UnityEngine;
 public class HintsScript : MonoBehaviour
 {
     private Transform coin;
+    private GameObject leftArrow;
+    private GameObject rightArrow;
 
     void Start()
     {
         coin = GameObject.Find("Coin").transform;
+        leftArrow = transform.Find("LeftHint").gameObject;
+        rightArrow = transform.Find("RightHint").gameObject;
+        GameEventSystem.AddListener(OnCoinSpawnEvent, "CoinSpawn");
+        GameEventSystem.AddListener(OnCoinEvent, "Coin");
     }
     
     void Update()
     {
-        //Vector3 ws = Camera.main.WorldToScreenPoint(Vector3.zero);      // px  
-        Vector3 wv = Camera.main.WorldToViewportPoint(coin.position);    // 0..1
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            string pos = "";
-            if (wv.x >= 0f && wv.x <= 1f && wv.y >= 0f && wv.y <= 1f && wv.z >= 0f) pos = "Visible";
-            else if (wv.x < 0) pos = "Left";
-            else pos = "Right";
+        if (coin == null) coin = GameObject.FindGameObjectWithTag("Coin").transform;
 
-            Debug.Log($"wv = {wv}, {pos}");
+        Vector3 wvL = Camera.main.WorldToViewportPoint(coin.position - Camera.main.transform.right * 0.75f);    // 0..1
+        Vector3 wvR = Camera.main.WorldToViewportPoint(coin.position + Camera.main.transform.right * 0.75f);    // 0..1
+
+
+        if (wvL.z > 0 && wvR.z > 0)
+        {
+            if(wvR.x< 0)
+            {
+                leftArrow.SetActive(true);
+                rightArrow.SetActive(false);
+            }
+            else if (wvL.x > 1f)
+            {
+                leftArrow.SetActive(false);
+                rightArrow.SetActive(true);
+            }
+            else
+            {
+                leftArrow.SetActive(false);
+                rightArrow.SetActive(false);
+            }
         }
+        else
+        {
+            float a = Vector3.SignedAngle(
+                Camera.main.transform.forward,
+                coin.position - Camera.main.transform.position,
+                Vector3.down
+            );
+            if (a < 0)
+            {
+                leftArrow.SetActive(false);
+                rightArrow.SetActive(true);
+            }
+            else
+            {
+                leftArrow.SetActive(true);
+                rightArrow.SetActive(false);
+            }
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                Debug.Log(a);
+            }
+        }
+    }
+
+    private void OnCoinSpawnEvent(string type, object payload)
+    {
+        coin = ((GameObject)payload).transform;
+    }
+
+    private void OnCoinEvent(string type, object payload)
+    {
+        if (payload.Equals("Destroy"))
+        {
+            coin = null;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameEventSystem.RemoveListener(OnCoinSpawnEvent, "CoinSpawn");
+        GameEventSystem.RemoveListener(OnCoinEvent, "Coin");
     }
 }

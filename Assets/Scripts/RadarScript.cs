@@ -29,12 +29,15 @@ public class RadarScript : MonoBehaviour
         GameEventSystem.AddListener(OnCoinSpawnEvent, "CoinSpawn");
         GameEventSystem.AddListener(OnCoinEvent, "CoinDestroying");
 
-        var point2 = GameObject.Instantiate(samplePoint);
-        point2.transform.parent = screen.gameObject.transform;
-        point2.rectTransform.localPosition = new Vector3(50, 50);
-        point2.gameObject.SetActive(true);
+        foreach(var c in GameObject.FindGameObjectsWithTag("Coin"))
+        {
+            var point2 = GameObject.Instantiate(samplePoint);
+            point2.transform.parent = screen.gameObject.transform;
+            point2.rectTransform.localPosition = new Vector3(50, 50);
+            point2.gameObject.SetActive(true);
 
-        points.Add(new() { coin = coin, point = point2 });
+            points.Add(new() { coin = c.transform, point = point2 });
+        }
     }
 
     private void Update()

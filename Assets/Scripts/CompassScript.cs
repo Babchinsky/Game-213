@@ -17,7 +17,7 @@ public class CompassScript : MonoBehaviour
 
     void Update()
     {
-        if (coin == null) return;
+        if (coin == null) coin = GameObject.FindGameObjectWithTag("Coin").transform;
 
         Vector3 d = coin.position - character.position;
         Vector3 camFwd = Camera.main.transform.forward;     // character.forward;

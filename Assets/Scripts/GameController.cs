@@ -23,10 +23,14 @@ public class GameController : MonoBehaviour
     {
         if (payload.Equals("Destroy"))
         {
-            SpawnCoin();
-            SpawnCoin();
+            if (GameObject.FindGameObjectsWithTag("Coin").Length <= 1)
+            {
+                SpawnCoin();
+            }
+            if (Random.value < 0.5f) SpawnCoin();
+            if (Random.value < 0.5f) SpawnCoin();
         }
-        //Debug.Log($"Event: {type}, payload: {payload}");
+        //Debug.Log($"Event: {type} {payload}");
     }
 
     private void SpawnCoin()
