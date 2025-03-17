@@ -5,14 +5,18 @@ public class CompassScript : MonoBehaviour
     private Transform arrow;
     private Transform character;
     private Transform coin;
+    private Transform content;
 
     void Start()
     {
-        arrow = transform.Find("Arrow");    
+        content = this.transform.Find("Content");    
+        arrow = content.Find("Arrow");  
+        
         character = GameObject.Find("Character").transform;    
         coin = GameObject.Find("Coin").transform;
-        GameEventSystem.AddListener(OnCoinSpawnEvent, "CoinSpawn");
-        GameEventSystem.AddListener(OnCoinEvent, "Coin");
+        GameEventSystem.AddListener(OnGameEvent, "CoinSpawn", "Coin", nameof(GameState));
+        OnGameEvent(nameof(GameState), null);
+        //content.gameObject.SetActive(GameState.isCompassVisible);
     }
 
     void Update()
@@ -24,25 +28,36 @@ public class CompassScript : MonoBehaviour
         d.y = 0f;
         camFwd.y = 0f;
         float angle = Vector3.SignedAngle(camFwd, d, Vector3.down);
-        arrow.eulerAngles = new Vector3(0, 0, angle);
-    }
-
-    private void OnCoinSpawnEvent(string type, object payload)
-    {
-        coin = ((GameObject)payload).transform;
-    }
-
-    private void OnCoinEvent(string type, object payload)
-    {
-        if (payload.Equals("Destroy"))
+        if (content.gameObject.activeInHierarchy)
         {
-            coin = null;
+            arrow.eulerAngles = new Vector3(0, 0, angle);
+        }
+    }
+
+    private void OnGameEvent(string type, object payload)
+    {
+        switch (type)
+        {
+            case "Coin":
+                if (payload.Equals("Destroy"))
+                {
+                    coin = null;
+                }
+                break;
+            case "CoinSpawn":
+                coin = ((GameObject)payload).transform;
+                break;
+            case nameof(GameState):
+                if (payload == null || nameof(GameState.isCompassVisible).Equals(payload))
+                {
+                    content.gameObject.SetActive(GameState.isCompassVisible);
+                }
+                break;
         }
     }
 
     private void OnDestroy()
     {
-        GameEventSystem.RemoveListener(OnCoinSpawnEvent, "CoinSpawn");
-        GameEventSystem.RemoveListener(OnCoinEvent, "Coin");
+        GameEventSystem.RemoveListener(OnGameEvent, "CoinSpawn", "Coin", nameof(GameState));
     }
 }
