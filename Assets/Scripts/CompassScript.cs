@@ -16,7 +16,6 @@ public class CompassScript : MonoBehaviour
         coin = GameObject.Find("Coin").transform;
         GameEventSystem.AddListener(OnGameEvent, "CoinSpawn", "Coin", nameof(GameState));
         OnGameEvent(nameof(GameState), null);
-        //content.gameObject.SetActive(GameState.isCompassVisible);
     }
 
     void Update()

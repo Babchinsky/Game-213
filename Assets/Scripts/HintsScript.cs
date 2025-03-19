@@ -27,13 +27,13 @@ public class HintsScript : MonoBehaviour
         {
             if(wvR.x< 0)
             {
-                leftArrow.SetActive(true);
+                leftArrow.SetActive(GameState.isHintsVisible);
                 rightArrow.SetActive(false);
             }
             else if (wvL.x > 1f)
             {
                 leftArrow.SetActive(false);
-                rightArrow.SetActive(true);
+                rightArrow.SetActive(GameState.isHintsVisible);
             }
             else
             {
@@ -51,11 +51,11 @@ public class HintsScript : MonoBehaviour
             if (a < 0)
             {
                 leftArrow.SetActive(false);
-                rightArrow.SetActive(true);
+                rightArrow.SetActive(GameState.isHintsVisible);
             }
             else
             {
-                leftArrow.SetActive(true);
+                leftArrow.SetActive(GameState.isHintsVisible);
                 rightArrow.SetActive(false);
             }
             if (Input.GetKeyDown(KeyCode.V))
