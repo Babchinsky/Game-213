@@ -44,3 +44,6 @@
 
 ![image](https://github.com/user-attachments/assets/7dc11c46-dcf9-4ada-916c-6b586753545b)
 
+### 17.03.2025
+
+![Demo](GIFs/17.03.2025.gif)
