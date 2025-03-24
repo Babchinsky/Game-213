@@ -1,10 +1,12 @@
 using Cinemachine;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Device;
 
 public class DayNightScript : MonoBehaviour
 {
-    private float dayDuration = 1000.0f;
+    //private float dayDuration = 1000.0f;
+    private float dayDuration = 100.0f;
     private float dayTime;
     private float rotationAngle;
     private float dawnTime  = 4.0f;
@@ -15,7 +17,10 @@ public class DayNightScript : MonoBehaviour
     private Light moon;
     private Material skybox;
     private float maxSkyboxExposure = 1.3f; // From Default Skybox
-    private float minAmbientLight = 0.1f; 
+    private float minAmbientLight = 0.1f;
+    private string[] listenableEvents = { nameof(GameState) };
+
+    private bool isDay => dayTime >= dawnTime && dayTime < nightTime;
 
     void Start()
     {
@@ -32,6 +37,7 @@ public class DayNightScript : MonoBehaviour
         sun = transform.Find("Sun").GetComponent<Light>();
         moon = transform.Find("Moon").GetComponent<Light>();
         skybox = RenderSettings.skybox;
+        GameEventSystem.AddListener(OnGameEvent, listenableEvents);
     }
 
     void Update()
@@ -72,5 +78,22 @@ public class DayNightScript : MonoBehaviour
         skybox.SetFloat("_Exposure", coef * maxSkyboxExposure);
 
         this.transform.Rotate(0, 0, rotationAngle * Time.deltaTime);
+    }
+
+    private void OnGameEvent(string type, object payload)
+    {
+        if (nameof(GameState.daySkybox).Equals(payload) && isDay)
+        {
+            RenderSettings.skybox = GameState.daySkybox;
+        }
+        else if (nameof(GameState.nightSkybox).Equals(payload) && !isDay)
+        {
+            RenderSettings.skybox = GameState.nightSkybox;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        GameEventSystem.RemoveListener(OnGameEvent, listenableEvents);
     }
 }

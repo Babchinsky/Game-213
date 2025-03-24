@@ -7,5 +7,6 @@ public class MenuController : MonoBehaviour
     {
         DontDestroyOnLoad(GameObject.Find("MenuCanvas"));
         SceneManager.LoadScene(1);
+        GameState.activeSceneIndex = 1;
     }
 }

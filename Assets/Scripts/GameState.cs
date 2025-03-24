@@ -5,6 +5,55 @@ public class GameState
 {
     public static float gameTime24 { get; set; } = 12.0f;
 
+    #region skyboxes
+    private static Material _daySkybox;
+    public static Material daySkybox
+    {
+        get => _daySkybox;
+        set
+        {
+            if (value != _daySkybox)
+            {
+                _daySkybox = value;
+                GameEventSystem.EmitEvent(nameof(GameState), nameof(daySkybox));
+            }
+        }
+    }
+
+
+
+    private static Material _nightSkybox;
+    public static Material nightSkybox
+    {
+        get => _nightSkybox;
+        set
+        {
+            if (value != _nightSkybox)
+            {
+                _nightSkybox = value;
+                GameEventSystem.EmitEvent(nameof(GameState), nameof(nightSkybox));
+            }
+        }
+    }
+    #endregion
+
+    #region activeSceneIndex
+    private static int _activeSceneIndex = 0;
+
+    public static int activeSceneIndex
+    {
+        get { return _activeSceneIndex; }
+        set
+        {
+            if (_activeSceneIndex != value)
+            {
+                _activeSceneIndex = value;
+                GameEventSystem.EmitEvent(nameof(GameState), nameof(activeSceneIndex));
+            }
+        }
+    }
+    #endregion
+
     #region coinSpawnRadius (spawn zone)
     public const float coinSpawnRadiusMin = 10.0f;
     public const float coinSpawnRadiusMax = 100.0f;
