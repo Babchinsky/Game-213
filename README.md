@@ -51,3 +51,7 @@
 ### 19.03.2025
 
 ![Demo](GIFs/19.03.2025.gif)
+
+### 24.03.2025
+
+![image](https://github.com/user-attachments/assets/c1457d67-ba54-4864-8917-cc01248b3236)
