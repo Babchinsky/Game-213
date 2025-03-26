@@ -34,11 +34,24 @@ public class MenuDifficultyScript : MonoBehaviour
 
         Slider spawnProbabilitySlider = slidersLayout.Find("SpawnProbability/Slider").GetComponent<Slider>();
         spawnProbabilitySlider.value = GameState.coinSpawnProbability;
+
+        Slider staminaSlider = slidersLayout.Find("Stamina/Slider").GetComponent<Slider>();
+        staminaSlider.value = (GameState.staminaLimit - GameState.staminaLimitMin) / (GameState.staminaLimitMax - GameState.staminaLimitMin);
+
+
     }
 
-    void Update()
+    public void OnStaminaSliderChanged(float value)
     {
-        
+        GameState.staminaLimit = Mathf.Lerp(
+            GameState.staminaLimitMin,
+            GameState.staminaLimitMax,
+            value);
+        if(GameState.stamina > GameState.staminaLimit)
+        {
+            GameState.stamina = GameState.staminaLimit;
+        }
+        //Debug.Log(GameState.staminaLimit);
     }
 
     public void OnSpawnProbabilitySliderChanged(float value)

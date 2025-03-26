@@ -5,8 +5,7 @@ using UnityEngine.Device;
 
 public class DayNightScript : MonoBehaviour
 {
-    //private float dayDuration = 1000.0f;
-    private float dayDuration = 100.0f;
+    private float dayDuration = 2000.0f;
     private float dayTime;
     private float rotationAngle;
     private float dawnTime  = 4.0f;
@@ -15,10 +14,10 @@ public class DayNightScript : MonoBehaviour
     private float nightTime = 20.0f;
     private Light sun;
     private Light moon;
-    private Material skybox;
     private float maxSkyboxExposure = 1.3f; // From Default Skybox
     private float minAmbientLight = 0.1f;
     private string[] listenableEvents = { nameof(GameState) };
+    private bool isDayPrev;
 
     private bool isDay => dayTime >= dawnTime && dayTime < nightTime;
 
@@ -36,18 +35,25 @@ public class DayNightScript : MonoBehaviour
         }
         sun = transform.Find("Sun").GetComponent<Light>();
         moon = transform.Find("Moon").GetComponent<Light>();
-        skybox = RenderSettings.skybox;
+        GameState.gameTime24 = dayTime;
+        GameState.isDay = isDay;
         GameEventSystem.AddListener(OnGameEvent, listenableEvents);
     }
 
     void Update()
     {
+        bool isDayPrev = isDay;
         dayTime += 24f * Time.deltaTime / dayDuration;
         if (dayTime >= 24)
         {
             dayTime -= 24f;
         }
         GameState.gameTime24 = dayTime;
+        GameState.isDay = isDay;
+        if (isDayPrev != isDay) // day -> night || night -> day
+        {
+            OnDayNightChanged();
+        }
 
         float coef;
         if (dayTime >= dawnTime && dayTime < nightTime)
@@ -75,9 +81,21 @@ public class DayNightScript : MonoBehaviour
         }
 
         RenderSettings.ambientIntensity = Mathf.Clamp(coef, minAmbientLight, 1.0f);
-        skybox.SetFloat("_Exposure", coef * maxSkyboxExposure);
+        RenderSettings.skybox.SetFloat("_Exposure", coef * maxSkyboxExposure);
 
         this.transform.Rotate(0, 0, rotationAngle * Time.deltaTime);
+    }
+
+    private void OnDayNightChanged()
+    {
+        if (isDay && GameState.daySkybox != null)
+        {
+            RenderSettings.skybox = GameState.daySkybox;
+        }
+        if (!isDay && GameState.nightSkybox != null)
+        {
+            RenderSettings.skybox = GameState.nightSkybox;
+        }
     }
 
     private void OnGameEvent(string type, object payload)

@@ -5,6 +5,22 @@ public class GameState
 {
     public static float gameTime24 { get; set; } = 12.0f;
 
+    #region isDay
+    public static bool _isDay = true;
+    public static bool isDay
+    {
+        get => _isDay;
+        set
+        {
+            if (value != _isDay)
+            {
+                _isDay = value;
+                GameEventSystem.EmitEvent(nameof(GameState), nameof(isDay));
+            }
+        }
+    }
+    #endregion
+
     #region skyboxes
     private static Material _daySkybox;
     public static Material daySkybox
@@ -20,8 +36,6 @@ public class GameState
         }
     }
 
-
-
     private static Material _nightSkybox;
     public static Material nightSkybox
     {
@@ -30,6 +44,7 @@ public class GameState
         {
             if (value != _nightSkybox)
             {
+                Debug.Log(value);
                 _nightSkybox = value;
                 GameEventSystem.EmitEvent(nameof(GameState), nameof(nightSkybox));
             }
@@ -84,8 +99,13 @@ public class GameState
     #endregion
 
     public static float radarRadius             { get; set; } = 30.0f;
-    public static float staminaLimit            { get; set; } = 10.0f;
 
+    #region stamina
+    public static float staminaLimitMax            { get; set; } = 20.0f;
+    public static float staminaLimitMin            { get; set; } = 3.0f;
+    public static float staminaLimit            { get; set; } = 10.0f;
+    public static float stamina            { get; set; } = staminaLimit;
+    #endregion
 
     #region isCompassVisible
     public static bool _isCompassVisible = true;

@@ -51,10 +51,32 @@ public class CharacterScript : MonoBehaviour
             moveForward.Normalize();
         }
 
-        Vector3 moveStep = Time.deltaTime * moveSpeed * (1+ sprintValue) *  (
+        // Stamina
+        if (moveValue != Vector2.zero && sprintValue > 0)
+        {
+            if(GameState.stamina > Time.deltaTime)
+            {
+                GameState.stamina -= Time.deltaTime;
+            }
+            else
+            {
+                sprintValue = 0f;
+            }
+        }
+        else
+        {
+            GameState.stamina = Mathf.Clamp(
+                GameState.stamina + Time.deltaTime, 
+                0, GameState.staminaLimit);
+        }
+        
+        Vector3 moveStep = Time.deltaTime * moveSpeed * (1 + sprintValue) *  (
             moveValue.x * Camera.main.transform.right + 
             moveValue.y * moveForward
         );
+
+       
+
         if (moveState != MoveState.JumpStart && 
             moveState != MoveState.Jumping   && 
             moveState != MoveState.JumpFinish)

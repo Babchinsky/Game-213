@@ -5,12 +5,15 @@ using UnityEngine.Device;
 public class MenuQualityScript : MonoBehaviour
 {
     [SerializeField]
-    private Material[] daySkyboxes;
+    private Material[] daySkyboxes = new Material[0];
+    [SerializeField]
+    private Material[] nightSkyboxes = new Material[0];
     private Material daySkyboxDefault;
 
     private TMPro.TMP_Dropdown graphicsDropdown;
     private TMPro.TMP_Dropdown fogDropdown;
     private TMPro.TMP_Dropdown dayDropdown;
+    private TMPro.TMP_Dropdown nightDropdown;
 
     void Start()
     {
@@ -50,7 +53,35 @@ public class MenuQualityScript : MonoBehaviour
             .GetComponent<TMPro.TMP_Dropdown>();
         FillDaySkyboxDropdown();
         #endregion
+
+        #region Night
+        nightDropdown = layout
+            .Find("NightSky/Dropdown")
+            .GetComponent<TMPro.TMP_Dropdown>();
+        FillNightSkyboxDropdown();
+        #endregion
+
         GameEventSystem.AddListener(OnGameEvent, nameof(GameState));
+    }
+
+    private void FillNightSkyboxDropdown()
+    {
+        nightDropdown.ClearOptions();
+        foreach (Material m in nightSkyboxes)
+        {
+            nightDropdown.options.Add(new(m.name));
+        }
+        if (nightSkyboxes.Length > 0) 
+        {
+            nightDropdown.value = -1;
+            GameState.nightSkybox = nightSkyboxes[0];
+            nightDropdown.value = 0;
+        }
+    }
+
+    public void OnNightSkyDropdownChanged(int index)
+    {
+        GameState.nightSkybox = nightSkyboxes[index];
     }
 
     public void OnDaySkyDropdownChanged(int index)
